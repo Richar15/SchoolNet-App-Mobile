@@ -1,0 +1,72 @@
+// lib/model/student_model.dart
+
+class StudentRequestDTO {
+  final String name;
+  final String lastName;
+  final String username;
+  final String password;
+  final String email;
+  final String phone;
+  final String address;
+  final String grade;
+
+  StudentRequestDTO({
+    required this.name,
+    required this.lastName,
+    required this.username,
+    required this.password,
+    required this.email,
+    required this.phone,
+    required this.address,
+    required this.grade,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'lastName': lastName,
+      'username': username,
+      'password': password,
+      'email': email,
+      'phone': phone,
+      'address': address,
+      'grade': grade,
+    };
+  }
+}
+
+// DTO para la respuesta del estudiante (StudentDto)
+class StudentDto {
+  final int? id; // <--- CAMBIO AQUÍ: Ahora es nullable
+  final String name;
+  final String lastName;
+  final String username;
+  final String email;
+  final String phone;
+  final String address;
+  final String grade;
+
+  StudentDto({
+    this.id, // <--- CAMBIO AQUÍ: Ya no es required
+    required this.name,
+    required this.lastName,
+    required this.username,
+    required this.email,
+    required this.phone,
+    required this.address,
+    required this.grade,
+  });
+
+  factory StudentDto.fromJson(Map<String, dynamic> json) {
+    return StudentDto(
+      id: json['id'] as int?, // <--- CAMBIO AQUÍ: Usar 'as int?' para manejar null
+      name: json['name'],
+      lastName: json['lastName'],
+      username: json['username'],
+      email: json['email'],
+      phone: json['phone'],
+      address: json['address'],
+      grade: json['grade'],
+    );
+  }
+}
