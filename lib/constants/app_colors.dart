@@ -8,7 +8,7 @@ class AppColors {
   static const Color white = Colors.white;
   static const Color grey = Color(0xFFE0E0E0); // Para bordes y fondos sutiles
 
-  // Nuevo color blanco con opacidad para fondos de campos de texto
+
   static const Color whiteTransparent = Color(0x33FFFFFF); // 0x33 es ~20% de opacidad (51/255)
-  // Para texto con opacidad, podemos usar directamente Color(0xCCFFFFFF) por ejemplo
+  
 }

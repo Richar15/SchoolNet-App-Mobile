@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:school_net_mobil_app/model/auth_model.dart';
 import 'package:school_net_mobil_app/constants/app_colors.dart';
 import 'package:school_net_mobil_app/screen/login_screen.dart';
-
+import 'package:school_net_mobil_app/screen/all_schedules_screen.dart';
+import 'package:school_net_mobil_app/screen/student_grades_screen.dart'; // 👈 Importación añadida
 
 class DashboardStudentScreen extends StatelessWidget {
   final AuthResponseDTO authData;
@@ -16,7 +17,7 @@ class DashboardStudentScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Dashboard del Estudiante', style: TextStyle(color: AppColors.white)),
         backgroundColor: AppColors.primaryPurple,
-        automaticallyImplyLeading: false, // Oculta el botón de retroceso por defecto
+        automaticallyImplyLeading: false,
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -33,7 +34,7 @@ class DashboardStudentScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(
-                Icons.person, // Icono para estudiantes
+                Icons.person,
                 size: 80,
                 color: AppColors.accentPurpleLight,
               ),
@@ -51,7 +52,7 @@ class DashboardStudentScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: const Color(0x33FFFFFF), // Fondo semi-transparente
+                  color: const Color(0x33FFFFFF),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(color: const Color(0x4DFFFFFF), width: 1),
                 ),
@@ -76,13 +77,66 @@ class DashboardStudentScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 40),
+
+              // ✅ Botón Ver Horarios
               ElevatedButton(
                 onPressed: () {
-                  // Simular cierre de sesión: navegar de vuelta a la pantalla de login
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AllSchedulesScreen(),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: const Text(
+                  'Ver Horarios',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // ✅ Botón Ver Mis Notas
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StudentGradesScreen(token: authData.token!),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: const Text(
+                  'Ver Mis Notas',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // 🔴 Botón Cerrar Sesión
+              ElevatedButton(
+                onPressed: () {
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => const LoginScreen()),
-                    (Route<dynamic> route) => false, // Elimina todas las rutas anteriores
+                    (Route<dynamic> route) => false,
                   );
                 },
                 style: ElevatedButton.styleFrom(

@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
             builder: (context) => const ManageSchedulesScreen(),
           ),
         );
-      } else if (userRole == 'TEACHER') { // CAMBIADO de 'PROFESOR' a 'TEACHER'
+      } else if (userRole == 'TEACHER') { 
         // print('Navegando a DashboardTeacherScreen...'); // Eliminado print de depuración
         Navigator.pushReplacement(
           context,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:school_net_mobil_app/screen/login_screen.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
