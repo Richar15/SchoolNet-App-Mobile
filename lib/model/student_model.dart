@@ -41,6 +41,7 @@ class StudentDto {
   final String name;
   final String lastName;
   final String username;
+  final String password;
   final String email;
   final String phone;
   final String address;
@@ -51,6 +52,7 @@ class StudentDto {
     required this.name,
     required this.lastName,
     required this.username,
+    required this.password,
     required this.email,
     required this.phone,
     required this.address,
@@ -63,6 +65,7 @@ class StudentDto {
       name: json['name'],
       lastName: json['lastName'],
       username: json['username'],
+      password: json['password'],
       email: json['email'],
       phone: json['phone'],
       address: json['address'],

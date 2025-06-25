@@ -81,4 +81,85 @@ class StudentService {
       throw AuthException('Fallo al conectar con el servidor para buscar estudiantes');
     }
   }
+
+  Future<StudentDto> updateStudent(int id, StudentRequestDTO updatedStudent) async {
+  final url = Uri.parse('$baseUrl/$id');
+
+  try {
+    final response = await http.put(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(updatedStudent.toJson()),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return StudentDto.fromJson(data);
+    } else {
+      String errorMessage = 'Error al actualizar estudiante';
+      try {
+        final errorData = jsonDecode(response.body);
+        errorMessage = errorData['mensaje'] ?? errorData['message'] ?? errorMessage;
+      } catch (_) {}
+      throw AuthException(errorMessage);
+    }
+  } catch (e) {
+    if (e is AuthException) rethrow;
+    throw AuthException('Fallo al conectar con el servidor al actualizar: ${e.toString()}');
+  }
+}
+Future<List<StudentDto>> getAllStudents() async {
+  final url = Uri.parse(baseUrl); // Mismo baseUrl ya que es @GetMapping sin path extra
+
+  try {
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => StudentDto.fromJson(json)).toList();
+    } else {
+      String errorMessage = 'Error al obtener estudiantes';
+      try {
+        final errorData = jsonDecode(response.body);
+        errorMessage = errorData['mensaje'] ?? errorData['message'] ?? errorMessage;
+      } catch (_) {}
+      throw AuthException(errorMessage);
+    }
+  } catch (e) {
+    if (e is AuthException) rethrow;
+    throw AuthException('Fallo al conectar con el servidor al obtener estudiantes');
+  }
+}
+Future<void> deleteStudent(int id) async {
+  final url = Uri.parse('$baseUrl/$id');
+
+  try {
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode != 200 && response.statusCode != 204) {
+      String errorMessage = 'Error al eliminar estudiante';
+      try {
+        final errorData = jsonDecode(response.body);
+        errorMessage = errorData['mensaje'] ?? errorData['message'] ?? errorMessage;
+      } catch (_) {}
+      throw AuthException(errorMessage);
+    }
+  } catch (e) {
+    if (e is AuthException) rethrow;
+    throw AuthException('Fallo al conectar con el servidor al eliminar estudiante');
+  }
+}
+
 }

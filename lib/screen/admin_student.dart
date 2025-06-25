@@ -19,21 +19,48 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    _fetchAllStudents();
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
 
+  Future<void> _fetchAllStudents() async {
+    setState(() {
+      _isLoading = true;
+      _message = '';
+    });
+
+    try {
+      final students = await _studentService.getAllStudents();
+      setState(() {
+        _searchResults = students;
+        _message = students.isEmpty ? 'No hay estudiantes registrados.' : '';
+      });
+    } catch (e) {
+      setState(() {
+        _message = e is AuthException ? e.message : 'Error al obtener estudiantes.';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   Future<void> _performSearch() async {
     final keyword = _searchController.text.trim();
-    print('StudentSearchScreen: Iniciando búsqueda para palabra clave: "$keyword"'); // DEBUG
     if (keyword.isEmpty) {
       setState(() {
         _message = 'Por favor, ingresa una palabra clave para buscar.';
         _searchResults = [];
-        _isLoading = false; // Asegurarse de que isLoading sea false
+        _isLoading = false;
       });
-      print('StudentSearchScreen: Palabra clave vacía.'); // DEBUG
       return;
     }
 
@@ -42,40 +69,121 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
       _message = '';
       _searchResults = [];
     });
-    print('StudentSearchScreen: Estado de carga activado.'); // DEBUG
 
     try {
       final students = await _studentService.searchStudentsByKeyword(keyword);
-      if (!mounted) {
-        print('StudentSearchScreen: Widget desmontado, no se actualiza el estado.'); // DEBUG
-        return;
-      }
+      if (!mounted) return;
 
       setState(() {
         _searchResults = students;
-        if (students.isEmpty) {
-          _message = 'No se encontraron estudiantes para la palabra clave "$keyword".';
-        } else {
-          _message = 'Resultados de búsqueda para "$keyword".';
-        }
+        _message = students.isEmpty
+            ? 'No se encontraron estudiantes para la palabra clave "$keyword".'
+            : 'Resultados de búsqueda para "$keyword".';
       });
-      print('StudentSearchScreen: Búsqueda exitosa. Resultados: ${_searchResults.length}'); // DEBUG
     } on AuthException catch (e) {
       setState(() {
         _message = e.message;
       });
-      print('StudentSearchScreen: AuthException capturada en UI: ${e.message}'); // DEBUG
     } catch (e) {
       setState(() {
         _message = 'Ocurrió un error inesperado: ${e.toString()}';
       });
-      print('StudentSearchScreen: Error inesperado en UI: ${e.toString()}'); // DEBUG
     } finally {
       setState(() {
         _isLoading = false;
       });
-      print('StudentSearchScreen: Estado de carga desactivado.'); // DEBUG
     }
+  }
+
+  Future<void> _deleteStudent(int id) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmar eliminación'),
+        content: const Text('¿Estás seguro de eliminar este estudiante?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
+          ElevatedButton(onPressed: () => Navigator.pop(context, true), child: const Text('Eliminar')),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      try {
+        await _studentService.deleteStudent(id);
+        _fetchAllStudents();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Estudiante eliminado')));
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error al eliminar: $e')));
+      }
+    }
+  }
+
+  void _showEditStudentDialog(StudentDto student) {
+    final nameController = TextEditingController(text: student.name);
+    final lastNameController = TextEditingController(text: student.lastName);
+    final phoneController = TextEditingController(text: student.phone);
+    final addressController = TextEditingController(text: student.address);
+    final passwordController = TextEditingController(text: student.password);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Editar Estudiante'),
+        content: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(controller: nameController, decoration: const InputDecoration(labelText: 'Nombre')),
+              TextField(controller: lastNameController, decoration: const InputDecoration(labelText: 'Apellido')),
+              TextField(controller: phoneController, decoration: const InputDecoration(labelText: 'Teléfono')),
+              TextField(controller: addressController, decoration: const InputDecoration(labelText: 'Dirección')),
+              TextField(controller: passwordController, decoration: const InputDecoration(labelText: 'Contraseña')),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
+          ElevatedButton(
+            onPressed: () async {
+              final updated = StudentRequestDTO(
+                name: nameController.text,
+                lastName: lastNameController.text,
+                username: student.username,
+                email: student.email,
+                phone: phoneController.text,
+                address: addressController.text,
+                grade: student.grade,
+                password: passwordController.text,
+              );
+
+              final studentId = student.id;
+              if (studentId == null) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Error: El estudiante no tiene un ID válido.')),
+                );
+                return;
+              }
+
+              try {
+                await _studentService.updateStudent(studentId, updated);
+                Navigator.pop(context);
+                _fetchAllStudents();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Estudiante actualizado')),
+                );
+              } catch (e) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error al actualizar: $e')),
+                );
+              }
+            },
+            child: const Text('Guardar'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -84,7 +192,7 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         title: const Text(
-          'Buscar Estudiantes',
+          'Estudiantes',
           style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: AppColors.primaryPurple,
@@ -101,16 +209,14 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Campo de búsqueda
               TextField(
                 controller: _searchController,
                 style: const TextStyle(color: AppColors.white),
                 decoration: InputDecoration(
                   labelText: 'Buscar por nombre, usuario, etc.',
-                  hintText: 'Ej. Juan Pérez',
                   labelStyle: const TextStyle(color: AppColors.white),
+                  hintText: 'Ej. Juan Pérez',
                   hintStyle: const TextStyle(color: Color(0xB3FFFFFF)),
                   filled: true,
                   fillColor: AppColors.whiteTransparent,
@@ -118,29 +224,20 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide: BorderSide.none,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: const BorderSide(color: AppColors.accentPurpleLight, width: 2),
-                  ),
                   prefixIcon: const Icon(Icons.search, color: AppColors.white),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.clear, color: AppColors.white),
                           onPressed: () {
                             _searchController.clear();
-                            setState(() {
-                              _searchResults = [];
-                              _message = '';
-                            });
+                            _fetchAllStudents();
                           },
                         )
                       : null,
                 ),
-                onSubmitted: (_) => _performSearch(), // Permite buscar al presionar Enter
+                onSubmitted: (_) => _performSearch(),
               ),
               const SizedBox(height: 20),
-
-              // Botón de búsqueda
               _isLoading
                   ? const Center(
                       child: CircularProgressIndicator(
@@ -164,9 +261,7 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
                         minimumSize: const Size(double.infinity, 50),
                       ),
                     ),
-              const SizedBox(height: 20),
-
-              // Mensaje de estado
+              const SizedBox(height: 10),
               if (_message.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
@@ -174,22 +269,20 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
                     _message,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: _message.contains('No se encontraron') || _message.contains('error') || _message.contains('Fallo')
+                      color: _message.contains('No') || _message.contains('error') || _message.contains('Fallo')
                           ? Colors.redAccent
                           : AppColors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-
-              // Lista de resultados
               Expanded(
                 child: _searchResults.isEmpty && !_isLoading && _message.isEmpty
-                    ? Center(
+                    ? const Center(
                         child: Text(
                           'Ingresa una palabra clave para empezar a buscar estudiantes.',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(color: AppColors.white, fontSize: 18),
+                          style: TextStyle(color: AppColors.white, fontSize: 18),
                         ),
                       )
                     : ListView.builder(
@@ -210,32 +303,28 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
                                 children: [
                                   Text(
                                     '${student.name} ${student.lastName}',
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColors.white,
-                                    ),
+                                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.white),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
-                                    'Usuario: ${student.username}',
-                                    style: const TextStyle(fontSize: 16, color: AppColors.white),
-                                  ),
-                                  Text(
-                                    'Grado: ${student.grade}',
-                                    style: const TextStyle(fontSize: 16, color: AppColors.white),
-                                  ),
-                                  Text(
-                                    'Email: ${student.email}',
-                                    style: const TextStyle(fontSize: 16, color: AppColors.white),
-                                  ),
-                                  Text(
-                                    'Teléfono: ${student.phone}',
-                                    style: const TextStyle(fontSize: 16, color: AppColors.white),
-                                  ),
-                                  Text(
-                                    'Dirección: ${student.address}',
-                                    style: const TextStyle(fontSize: 16, color: AppColors.white),
+                                  Text('Usuario: ${student.username}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
+                                  Text('Contraseña: ${student.password}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
+                                  Text('Grado: ${student.grade}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
+                                  Text('Email: ${student.email}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
+                                  Text('Teléfono: ${student.phone}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
+                                  Text('Dirección: ${student.address}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.edit, color: Colors.amber),
+                                        onPressed: () => _showEditStudentDialog(student),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.delete, color: Colors.redAccent),
+                                        onPressed: () => _deleteStudent(student.id!),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),

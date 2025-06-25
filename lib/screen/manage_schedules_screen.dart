@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:school_net_mobil_app/constants/app_colors.dart';
+import 'package:school_net_mobil_app/screen/admin_teacher.dart';
 import 'package:school_net_mobil_app/screen/login_screen.dart';
 import 'package:school_net_mobil_app/screen/schedule_management_screen.dart';
-import 'package:school_net_mobil_app/screen/student_search_screen.dart';
+import 'package:school_net_mobil_app/screen/admin_student.dart';
+
 
 class ManageSchedulesScreen extends StatelessWidget {
   const ManageSchedulesScreen({super.key});
@@ -49,30 +51,31 @@ class ManageSchedulesScreen extends StatelessWidget {
               children: [
                 Icon(
                   Icons.calendar_month,
-                  size: 120,
+                  size: 100,
                   color: AppColors.accentPurpleLight,
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 const Text(
-                  'Bienvenido Admin. Administra los Horarios Escolares de Todos los Grados Facil y Rapido ',
+                  'Bienvenido Admin',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: AppColors.white,
                   ),
                 ),
-                const SizedBox(height: 15),
+                const SizedBox(height: 10),
                 const Text(
-                  'Accede a la plataforma para gestionar los horarios.',
+                  'Administra Horarios, Estudiantes y Profesores fácilmente.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     color: Color(0xCCFFFFFF),
                   ),
                 ),
-                const SizedBox(height: 50),
-                // Botón para Gestión de Horarios
+                const SizedBox(height: 30),
+
+                // Botón Gestión Horarios
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
@@ -80,25 +83,25 @@ class ManageSchedulesScreen extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => const ScheduleManagementScreen()),
                     );
                   },
-                  icon: const Icon(Icons.arrow_forward_ios, size: 20),
+                  icon: const Icon(Icons.schedule, size: 18),
                   label: const Text(
-                    'Ir a Gestión de Horarios',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    'Gestión Horarios',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accentPurpleLight,
                     foregroundColor: AppColors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    minimumSize: const Size(double.infinity, 60),
-                    elevation: 8,
+                    minimumSize: const Size(double.infinity, 48),
+                    elevation: 5,
                   ),
                 ),
-                const SizedBox(height: 20), // Espacio entre botones
+                const SizedBox(height: 12),
 
-                // Nuevo botón para Buscar Estudiantes
+                // Botón Estudiantes
                 ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
@@ -106,20 +109,46 @@ class ManageSchedulesScreen extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => const StudentSearchScreen()),
                     );
                   },
-                  icon: const Icon(Icons.person_search, size: 20), // Icono de búsqueda de persona
+                  icon: const Icon(Icons.person_search, size: 18),
                   label: const Text(
-                    'Buscar Estudiantes',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    'Gestionar Estudiantes',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.accentPurpleLight, // Un color diferente para destacar
+                    backgroundColor: AppColors.accentPurpleLight,
                     foregroundColor: AppColors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 18),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0),
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                    minimumSize: const Size(double.infinity, 60),
-                    elevation: 8,
+                    minimumSize: const Size(double.infinity, 48),
+                    elevation: 5,
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                // Botón Profesores
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const TeacherSearchScreen()),
+                    );
+                  },
+                  icon: const Icon(Icons.school, size: 18),
+                  label: const Text(
+                    'Gestionar Profesores',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurpleAccent,
+                    foregroundColor: AppColors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    minimumSize: const Size(double.infinity, 48),
+                    elevation: 5,
                   ),
                 ),
               ],
