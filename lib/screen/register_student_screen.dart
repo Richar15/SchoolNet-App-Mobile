@@ -74,7 +74,7 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
       return 'Por favor, ingresa una contraseña';
     }
     if (value.length < 8) {
-      return 'La contraseña debe tener al menos 6 caracteres';
+      return 'La contraseña debe tener al menos 8 caracteres';
     }
     return null;
   }

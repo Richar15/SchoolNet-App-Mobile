@@ -6,7 +6,7 @@ import 'package:school_net_mobil_app/model/teacher_model.dart';
 import 'package:school_net_mobil_app/exceptions/auth_exception.dart';
 
 class TeacherService {
-  final String baseUrl = 'http://192.168.1.103:8080/api/teachers';
+  final String baseUrl = 'http://192.168.1.102:8080/api/teachers';
 
   Future<void> createTeacher(TeacherRequestDTO teacherData) async {
     final url = Uri.parse('$baseUrl/create');

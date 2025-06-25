@@ -75,14 +75,16 @@ class _AssignGradesScreenState extends State<AssignGradesScreen> {
   }
 
   Future<void> _loadAssignments() async {
-    final assignments = await _gradeService.getAssignments(widget.token);
-    setState(() => _assignments = assignments);
-  }
+  final assignments = await _gradeService.getAssignments(widget.token);
+  setState(() => _assignments = assignments);
+}
 
   Future<void> _loadStudents(int assignmentId) async {
-    final students = await _gradeService.getStudents(assignmentId, widget.token);
-    setState(() => _students = students);
-  }
+  final students = await _gradeService.getStudents(assignmentId, widget.token);
+  setState(() {
+    _students = students;
+  });
+}
 
   Future<void> _loadAssignedGrades() async {
     setState(() => _isLoadingGrades = true);
@@ -122,80 +124,80 @@ class _AssignGradesScreenState extends State<AssignGradesScreen> {
   }
 
   void _submitGrades() async {
-    if (_selectedAssignment == null || _selectedStudent == null) {
+  if (_selectedAssignment == null || _selectedStudent == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Por favor selecciona una asignación y un estudiante'),
+        backgroundColor: Colors.orange,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
+    return;
+  }
+
+  List<TextEditingController> controllers = [
+    _grade1Controller,
+    _grade2Controller,
+    _grade3Controller,
+    _grade4Controller,
+  ];
+
+  for (var controller in controllers) {
+    final value = double.tryParse(controller.text);
+    if (value == null || value < 0.0 || value > 5.0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Por favor selecciona una asignación y un estudiante'),
-          backgroundColor: Colors.orange,
+          content: const Text('Las notas deben estar entre 0.0 y 5.0'),
+          backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       );
       return;
     }
+  }
 
-    List<TextEditingController> controllers = [
-      _grade1Controller,
-      _grade2Controller,
-      _grade3Controller,
-      _grade4Controller,
-    ];
+  final request = GradeRequest(
+    studentId: _selectedStudent!.id,
+    assignmentId: _selectedAssignment!.id,
+    grade1: double.parse(_grade1Controller.text),
+    grade2: double.parse(_grade2Controller.text),
+    grade3: double.parse(_grade3Controller.text),
+    grade4: double.parse(_grade4Controller.text),
+  );
 
-    for (var controller in controllers) {
-      final value = double.tryParse(controller.text);
-      if (value == null || value < 0.0 || value > 5.0) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Las notas deben estar entre 0.0 y 5.0'),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
-        );
-        return;
-      }
-    }
-
-    final request = GradeRequest(
-      studentId: _selectedStudent!.id,
-      assignmentId: _selectedAssignment!.id,
-      grade1: double.parse(_grade1Controller.text),
-      grade2: double.parse(_grade2Controller.text),
-      grade3: double.parse(_grade3Controller.text),
-      grade4: double.parse(_grade4Controller.text),
+  try {
+    await _gradeService.assignGrade(request, widget.token);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Notas asignadas con éxito'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
     );
 
-    try {
-      await _gradeService.assignGrade(request, widget.token);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Notas asignadas con éxito'),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-      );
-
-      _grade1Controller.clear();
-      _grade2Controller.clear();
-      _grade3Controller.clear();
-      _grade4Controller.clear();
-      setState(() {
-        _selectedStudent = null;
-        _selectedAssignment = null;
-      });
-      _loadAssignedGrades();
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al asignar notas: $e'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-      );
-    }
+    _grade1Controller.clear();
+    _grade2Controller.clear();
+    _grade3Controller.clear();
+    _grade4Controller.clear();
+    setState(() {
+      _selectedStudent = null;
+      _selectedAssignment = null;
+    });
+    _loadAssignedGrades();
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Error al asignar notas: $e'),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+    );
   }
+}
 
   double _calculateAverage(GradeModel grade) => grade.finalGrade;
 

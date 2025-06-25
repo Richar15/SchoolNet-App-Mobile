@@ -5,7 +5,7 @@ import 'package:school_net_mobil_app/exceptions/auth_exception.dart';
 
 
 class AuthService {
-  final String baseUrl = 'http://192.168.1.103:8080/api/auth'; 
+  final String baseUrl = 'http://192.168.1.102:8080/api/auth'; 
 
   Future<AuthResponseDTO> login(String username, String password) async {
     final url = Uri.parse('$baseUrl/login');

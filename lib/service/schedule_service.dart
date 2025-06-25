@@ -6,7 +6,7 @@ import 'package:school_net_mobil_app/model/schedule_model.dart';
 import 'package:school_net_mobil_app/exceptions/auth_exception.dart'; // Reutilizamos AuthException para errores de API
 
 class ScheduleService {
-  final String baseUrl = 'http://192.168.1.103:8080/api/schedules'; // Ajusta la IP/dominio de tu backend
+  final String baseUrl = 'http://192.168.1.102:8080/api/schedules'; // Ajusta la IP/dominio de tu backend
 
   Future<ScheduleEntity> getScheduleByGrade(String grade) async {
     final url = Uri.parse('$baseUrl/$grade');

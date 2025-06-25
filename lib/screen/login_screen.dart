@@ -315,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       Navigator.pop(context); // Cierra el bottom sheet
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => const RegisterStudentScreen()),
+                                        MaterialPageRoute(builder: (context) =>  RegisterStudentScreen()),
                                       );
                                     },
                                   ),
