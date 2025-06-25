@@ -99,11 +99,37 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Confirmar eliminación'),
-        content: const Text('¿Estás seguro de eliminar este estudiante?'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text(
+          'Confirmar eliminación',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.darkText,
+          ),
+        ),
+        content: const Text(
+          '¿Estás seguro de eliminar este estudiante?',
+          style: TextStyle(color: AppColors.darkText),
+        ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancelar')),
-          ElevatedButton(onPressed: () => Navigator.pop(context, true), child: const Text('Eliminar')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(color: AppColors.darkText),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            child: const Text('Eliminar'),
+          ),
         ],
       ),
     );
@@ -112,9 +138,23 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
       try {
         await _studentService.deleteStudent(id);
         _fetchAllStudents();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Estudiante eliminado')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Estudiante eliminado exitosamente'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        );
       } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error al eliminar: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al eliminar: $e'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        );
       }
     }
   }
@@ -129,20 +169,38 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Editar Estudiante'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text(
+          'Editar Estudiante',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.darkText,
+          ),
+        ),
         content: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: nameController, decoration: const InputDecoration(labelText: 'Nombre')),
-              TextField(controller: lastNameController, decoration: const InputDecoration(labelText: 'Apellido')),
-              TextField(controller: phoneController, decoration: const InputDecoration(labelText: 'Teléfono')),
-              TextField(controller: addressController, decoration: const InputDecoration(labelText: 'Dirección')),
-              TextField(controller: passwordController, decoration: const InputDecoration(labelText: 'Contraseña')),
+              _buildDialogTextField(nameController, 'Nombre', Icons.person),
+              const SizedBox(height: 12),
+              _buildDialogTextField(lastNameController, 'Apellido', Icons.person_outline),
+              const SizedBox(height: 12),
+              _buildDialogTextField(phoneController, 'Teléfono', Icons.phone),
+              const SizedBox(height: 12),
+              _buildDialogTextField(addressController, 'Dirección', Icons.location_on),
+              const SizedBox(height: 12),
+              _buildDialogTextField(passwordController, 'Contraseña', Icons.lock, isPassword: true),
             ],
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Cancelar',
+              style: TextStyle(color: AppColors.darkText),
+            ),
+          ),
           ElevatedButton(
             onPressed: () async {
               final updated = StudentRequestDTO(
@@ -160,7 +218,12 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
               if (studentId == null) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Error: El estudiante no tiene un ID válido.')),
+                  SnackBar(
+                    content: const Text('Error: El estudiante no tiene un ID válido.'),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
                 );
                 return;
               }
@@ -170,18 +233,62 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
                 Navigator.pop(context);
                 _fetchAllStudents();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Estudiante actualizado')),
+                  SnackBar(
+                    content: const Text('Estudiante actualizado exitosamente'),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
                 );
               } catch (e) {
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error al actualizar: $e')),
+                  SnackBar(
+                    content: Text('Error al actualizar: $e'),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
                 );
               }
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryPurple,
+              foregroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
             child: const Text('Guardar'),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDialogTextField(
+    TextEditingController controller,
+    String label,
+    IconData icon, {
+    bool isPassword = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: AppColors.darkText.withOpacity(0.7)),
+        prefixIcon: Icon(icon, color: AppColors.primaryPurple),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: AppColors.grey),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: AppColors.primaryPurple, width: 2),
+        ),
+        filled: true,
+        fillColor: AppColors.grey.withOpacity(0.1),
       ),
     );
   }
@@ -192,150 +299,365 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
       backgroundColor: AppColors.white,
       appBar: AppBar(
         title: const Text(
-          'Estudiantes',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
+          'Gestión de Estudiantes',
+          style: TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
         ),
         backgroundColor: AppColors.primaryPurple,
+        elevation: 0,
         iconTheme: const IconThemeData(color: AppColors.white),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.primaryPurple, AppColors.secondaryPurple],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: _searchController,
-                style: const TextStyle(color: AppColors.white),
-                decoration: InputDecoration(
-                  labelText: 'Buscar por nombre, usuario, etc.',
-                  labelStyle: const TextStyle(color: AppColors.white),
-                  hintText: 'Ej. Juan Pérez',
-                  hintStyle: const TextStyle(color: Color(0xB3FFFFFF)),
-                  filled: true,
-                  fillColor: AppColors.whiteTransparent,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  prefixIcon: const Icon(Icons.search, color: AppColors.white),
-                  suffixIcon: _searchController.text.isNotEmpty
-                      ? IconButton(
-                          icon: const Icon(Icons.clear, color: AppColors.white),
-                          onPressed: () {
-                            _searchController.clear();
-                            _fetchAllStudents();
-                          },
-                        )
-                      : null,
-                ),
-                onSubmitted: (_) => _performSearch(),
-              ),
-              const SizedBox(height: 20),
-              _isLoading
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentPurpleLight),
-                      ),
-                    )
-                  : ElevatedButton.icon(
-                      onPressed: _performSearch,
-                      icon: const Icon(Icons.search),
-                      label: const Text(
-                        'Buscar Estudiantes',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accentPurpleLight,
-                        foregroundColor: AppColors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        minimumSize: const Size(double.infinity, 50),
-                      ),
-                    ),
-              const SizedBox(height: 10),
-              if (_message.isNotEmpty)
+      body: Column(
+        children: [
+          // Header Section
+          Container(
+            width: double.infinity,
+            color: AppColors.primaryPurple,
+            child: Column(
+              children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Text(
-                    _message,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: _message.contains('No') || _message.contains('error') || _message.contains('Fallo')
-                          ? Colors.redAccent
-                          : AppColors.white,
-                      fontWeight: FontWeight.bold,
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 30),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.people,
+                          size: 40,
+                          color: AppColors.primaryPurple,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Buscar Estudiantes',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Encuentra y gestiona la información de los estudiantes',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Curva decorativa
+                Container(
+                  height: 30,
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
                     ),
                   ),
                 ),
-              Expanded(
-                child: _searchResults.isEmpty && !_isLoading && _message.isEmpty
-                    ? const Center(
-                        child: Text(
-                          'Ingresa una palabra clave para empezar a buscar estudiantes.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: AppColors.white, fontSize: 18),
-                        ),
-                      )
-                    : ListView.builder(
-                        itemCount: _searchResults.length,
-                        itemBuilder: (context, index) {
-                          final student = _searchResults[index];
-                          return Card(
-                            margin: const EdgeInsets.symmetric(vertical: 8.0),
-                            color: AppColors.primaryPurple,
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
+              ],
+            ),
+          ),
+          
+          // Search Section
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primaryPurple.withOpacity(0.1),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                    border: Border.all(
+                      color: AppColors.grey.withOpacity(0.3),
+                    ),
+                  ),
+                  child: TextField(
+                    controller: _searchController,
+                    style: const TextStyle(color: AppColors.darkText),
+                    decoration: InputDecoration(
+                      labelText: 'Buscar por nombre, usuario, etc.',
+                      labelStyle: TextStyle(color: AppColors.darkText.withOpacity(0.6)),
+                      hintText: 'Ej. Juan Pérez',
+                      hintStyle: TextStyle(color: AppColors.darkText.withOpacity(0.4)),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      prefixIcon: const Icon(Icons.search, color: AppColors.primaryPurple),
+                      suffixIcon: _searchController.text.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear, color: AppColors.primaryPurple),
+                              onPressed: () {
+                                _searchController.clear();
+                                _fetchAllStudents();
+                              },
+                            )
+                          : null,
+                    ),
+                    onSubmitted: (_) => _performSearch(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _isLoading ? null : _performSearch,
+                    icon: _isLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    '${student.name} ${student.lastName}',
-                                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.white),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text('Usuario: ${student.username}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
-                                  Text('Contraseña: ${student.password}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
-                                  Text('Grado: ${student.grade}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
-                                  Text('Email: ${student.email}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
-                                  Text('Teléfono: ${student.phone}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
-                                  Text('Dirección: ${student.address}', style: const TextStyle(fontSize: 16, color: AppColors.white)),
-                                  const SizedBox(height: 8),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      IconButton(
+                          )
+                        : const Icon(Icons.search),
+                    label: Text(
+                      _isLoading ? 'Buscando...' : 'Buscar Estudiantes',
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryPurple,
+                      foregroundColor: AppColors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 4,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          // Message Section
+          if (_message.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: _message.contains('No') || _message.contains('error') || _message.contains('Fallo')
+                      ? Colors.red.withOpacity(0.1)
+                      : AppColors.primaryPurple.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: _message.contains('No') || _message.contains('error') || _message.contains('Fallo')
+                        ? Colors.red.withOpacity(0.3)
+                        : AppColors.primaryPurple.withOpacity(0.3),
+                  ),
+                ),
+                child: Text(
+                  _message,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: _message.contains('No') || _message.contains('error') || _message.contains('Fallo')
+                        ? Colors.red
+                        : AppColors.primaryPurple,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          
+          // Results Section
+          Expanded(
+            child: _searchResults.isEmpty && !_isLoading && _message.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.search,
+                          size: 80,
+                          color: AppColors.grey.withOpacity(0.5),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Ingresa una palabra clave para\nempezar a buscar estudiantes',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColors.darkText.withOpacity(0.6),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+                    child: ListView.builder(
+                      itemCount: _searchResults.length,
+                      itemBuilder: (context, index) {
+                        final student = _searchResults[index];
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 16),
+                          decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primaryPurple.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                            border: Border.all(
+                              color: AppColors.grey.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.primaryPurple.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: const Icon(
+                                        Icons.person,
+                                        color: AppColors.primaryPurple,
+                                        size: 24,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${student.name} ${student.lastName}',
+                                            style: const TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: AppColors.darkText,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Grado: ${student.grade}',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: AppColors.darkText.withOpacity(0.6),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                _buildInfoRow(Icons.account_circle, 'Usuario', student.username),
+                                _buildInfoRow(Icons.lock, 'Contraseña', student.password),
+                                _buildInfoRow(Icons.email, 'Email', student.email),
+                                _buildInfoRow(Icons.phone, 'Teléfono', student.phone),
+                                _buildInfoRow(Icons.location_on, 'Dirección', student.address),
+                                const SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.amber.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: IconButton(
                                         icon: const Icon(Icons.edit, color: Colors.amber),
                                         onPressed: () => _showEditStudentDialog(student),
+                                        tooltip: 'Editar estudiante',
                                       ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete, color: Colors.redAccent),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.red.withOpacity(0.1),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.delete, color: Colors.red),
                                         onPressed: () => _deleteStudent(student.id!),
+                                        tooltip: 'Eliminar estudiante',
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                      ),
-              ),
-            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
           ),
-        ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 16,
+            color: AppColors.primaryPurple.withOpacity(0.7),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '$label: ',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: AppColors.darkText.withOpacity(0.7),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.darkText,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

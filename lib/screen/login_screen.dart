@@ -3,7 +3,7 @@ import 'package:school_net_mobil_app/exceptions/auth_exception.dart';
 import 'package:school_net_mobil_app/model/auth_model.dart';
 import 'package:school_net_mobil_app/screen/dashboard_student_screen.dart';
 import 'package:school_net_mobil_app/screen/dashboard_teacher_screen.dart';
-import 'package:school_net_mobil_app/screen/manage_schedules_screen.dart';
+import 'package:school_net_mobil_app/screen/Admin_screen.dart';
 import 'package:school_net_mobil_app/screen/register_student_screen.dart';
 import 'package:school_net_mobil_app/screen/register_teacher_screen.dart';
 import 'package:school_net_mobil_app/service/auth_service.dart';

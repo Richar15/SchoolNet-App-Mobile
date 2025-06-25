@@ -128,16 +128,36 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmar Eliminación'),
-          content: Text('¿Estás seguro de que quieres eliminar el horario para el grado $_selectedGrade?'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text(
+            'Confirmar Eliminación',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.darkText,
+            ),
+          ),
+          content: Text(
+            '¿Estás seguro de que quieres eliminar el horario para el grado $_selectedGrade?',
+            style: const TextStyle(color: AppColors.darkText),
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(color: AppColors.darkText),
+              ),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: AppColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text('Eliminar'),
             ),
           ],
         );
@@ -177,16 +197,36 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Confirmar Eliminación Global'),
-          content: const Text('¡ADVERTENCIA! ¿Estás seguro de que quieres eliminar TODOS los horarios? Esta acción es irreversible.'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text(
+            'Confirmar Eliminación Global',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.darkText,
+            ),
+          ),
+          content: const Text(
+            '¡ADVERTENCIA! ¿Estás seguro de que quieres eliminar TODOS los horarios? Esta acción es irreversible.',
+            style: TextStyle(color: AppColors.darkText),
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+              child: const Text(
+                'Cancelar',
+                style: TextStyle(color: AppColors.darkText),
+              ),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Eliminar TODO', style: TextStyle(color: Colors.red)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red[800],
+                foregroundColor: AppColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text('Eliminar TODO'),
             ),
           ],
         );
@@ -273,25 +313,39 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen> {
     // Fila de encabezado (Hora y Días de la semana)
     List<Widget> headerCells = [
       Container(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(12),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: AppColors.primaryPurple.withOpacity(0.8),
-          border: Border.all(color: AppColors.white.withOpacity(0.3), width: 0.5),
+          color: AppColors.primaryPurple,
+          border: Border.all(color: AppColors.grey.withOpacity(0.3), width: 1),
         ),
-        child: const Text('Hora', style: TextStyle(fontWeight: FontWeight.bold, color: AppColors.white)),
+        child: const Text(
+          'Hora',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: AppColors.white,
+            fontSize: 14,
+          ),
+        ),
       )
     ];
     for (String day in daysInSchedule) {
       headerCells.add(
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(12),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColors.primaryPurple.withOpacity(0.8),
-            border: Border.all(color: AppColors.white.withOpacity(0.3), width: 0.5),
+            color: AppColors.primaryPurple,
+            border: Border.all(color: AppColors.grey.withOpacity(0.3), width: 1),
           ),
-          child: Text(day, style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.white)),
+          child: Text(
+            day,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: AppColors.white,
+              fontSize: 14,
+            ),
+          ),
         ),
       );
     }
@@ -301,18 +355,20 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen> {
     for (String timeRange in uniqueTimeRanges) {
       List<Widget> rowCells = [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(12),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: Color.fromRGBO(
-              AppColors.secondaryPurple.red,
-              AppColors.secondaryPurple.green, 
-              AppColors.secondaryPurple.blue,
-              0.6
-            ),
-            border: Border.all(color: AppColors.white.withOpacity(0.3), width: 0.5),
+            color: AppColors.secondaryPurple.withOpacity(0.9),
+            border: Border.all(color: AppColors.grey.withOpacity(0.3), width: 1),
           ),
-          child: Text(timeRange, style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold)),
+          child: Text(
+            timeRange,
+            style: const TextStyle(
+              color: AppColors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+            ),
+          ),
         )
       ];
       String startTime = timeRange.split('-')[0];
@@ -330,36 +386,93 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppColors.whiteTransparent,
-              border: Border.all(color: AppColors.white.withOpacity(0.3), width: 0.5),
+              color: AppColors.white,
+              border: Border.all(color: AppColors.grey.withOpacity(0.3), width: 1),
             ),
             child: sessionForSlot != null
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        sessionForSlot.subject != null && sessionForSlot.subject!.isNotEmpty
-                            ? sessionForSlot.subject!
-                            : 'RECREO',
-                        style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.accentPurpleLight, fontSize: 14),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: sessionForSlot.subject != null && sessionForSlot.subject!.isNotEmpty
+                              ? AppColors.primaryPurple.withOpacity(0.1)
+                              : AppColors.accentPurpleLight.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: Text(
+                          sessionForSlot.subject != null && sessionForSlot.subject!.isNotEmpty
+                              ? sessionForSlot.subject!
+                              : 'RECREO',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: sessionForSlot.subject != null && sessionForSlot.subject!.isNotEmpty
+                                ? AppColors.primaryPurple
+                                : AppColors.accentPurpleLight,
+                            fontSize: 12,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      Text(
-                        sessionForSlot.teacher,
-                        style: const TextStyle(fontSize: 12, color: AppColors.white),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.person,
+                            size: 12,
+                            color: AppColors.darkText.withOpacity(0.6),
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              sessionForSlot.teacher,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: AppColors.darkText.withOpacity(0.8),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        sessionForSlot.classroom,
-                        style: const TextStyle(fontSize: 12, color: AppColors.white),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.room,
+                            size: 12,
+                            color: AppColors.darkText.withOpacity(0.6),
+                          ),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              sessionForSlot.classroom,
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: AppColors.darkText.withOpacity(0.8),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   )
-                : const Text('Libre', style: TextStyle(color: Color(0xAAFFFFFF), fontSize: 12)),
+                : Center(
+                    child: Text(
+                      'Libre',
+                      style: TextStyle(
+                        color: AppColors.darkText.withOpacity(0.4),
+                        fontSize: 12,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                  ),
           ),
         );
       }
@@ -371,223 +484,480 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen> {
       appBar: AppBar(
         title: const Text(
           'Gestión de Horarios',
-          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColors.primaryPurple,
-        iconTheme: const IconThemeData(color: AppColors.white),
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [AppColors.primaryPurple, AppColors.secondaryPurple],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+          style: TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Selector de Grado
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.whiteTransparent,
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(color: AppColors.white.withAlpha(77), width: 1),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: _selectedGrade,
-                    hint: const Text('Selecciona un Grado', style: TextStyle(color: AppColors.white)),
-                    dropdownColor: AppColors.primaryPurple,
-                    style: const TextStyle(color: AppColors.white, fontSize: 16),
-                    iconEnabledColor: AppColors.white,
-                    isExpanded: true,
-                    items: _grades.map((String grade) {
-                      return DropdownMenuItem<String>(
-                        value: grade,
-                        child: Text(grade),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedGrade = newValue;
-                        _message = ''; // Limpiar mensaje al cambiar de grado
-                        _currentSchedule = null; // Limpiar horario al cambiar de grado
-                      });
-                    },
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Botones de acción (Cargar y Crear)
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: _isLoading ? null : _fetchSchedule,
-                      icon: _isLoading && _message.contains('Cargando') ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: AppColors.white,
-                          strokeWidth: 2,
-                        ),
-                      ) : const Icon(Icons.search),
-                      label: Text(
-                        _isLoading && _message.contains('Cargando') ? 'Cargando...' : 'Cargar Horario',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accentPurpleLight,
-                        foregroundColor: AppColors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10), // Espacio entre botones
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: _isLoading ? null : _createSchedule,
-                      icon: _isLoading && _message.contains('creando') ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: AppColors.white,
-                          strokeWidth: 2,
-                        ),
-                      ) : const Icon(Icons.add),
-                      label: Text(
-                        _isLoading && _message.contains('creando') ? 'Creando...' : 'Crear Horario',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.accentPurpleLight,
-                        foregroundColor: AppColors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10), // Espacio entre filas de botones
-
-              // Botones de acción (Eliminar)
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: _isLoading ? null : _deleteScheduleByGrade,
-                      icon: _isLoading && _message.contains('eliminando') && _message.contains('grado') ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: AppColors.white,
-                          strokeWidth: 2,
-                        ),
-                      ) : const Icon(Icons.delete_forever),
-                      label: Text(
-                        _isLoading && _message.contains('eliminando') && _message.contains('grado') ? 'Eliminando...' : 'Eliminar por Grado',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent, // Color para eliminar
-                        foregroundColor: AppColors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: _isLoading ? null : _deleteAllSchedules,
-                      icon: _isLoading && _message.contains('eliminando') && _message.contains('todos') ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: AppColors.white,
-                          strokeWidth: 2,
-                        ),
-                      ) : const Icon(Icons.clear_all),
-                      label: Text(
-                        _isLoading && _message.contains('eliminando') && _message.contains('todos') ? 'Eliminando Todo...' : 'Eliminar Todo',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[800], // Color más oscuro para eliminar todo
-                        foregroundColor: AppColors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-
-              // Mensaje de estado
-              if (_message.isNotEmpty)
+        backgroundColor: AppColors.primaryPurple,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: AppColors.white),
+      ),
+      body: Column(
+        children: [
+          // Header Section
+          Container(
+            width: double.infinity,
+            color: AppColors.primaryPurple,
+            child: Column(
+              children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Text(
-                    _message,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: _message.contains('exitosamente') ? AppColors.white : Colors.redAccent,
-                      fontWeight: FontWeight.bold,
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 30),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.schedule,
+                          size: 40,
+                          color: AppColors.primaryPurple,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Gestión de Horarios',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Crea, consulta y administra los horarios académicos',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Curva decorativa
+                Container(
+                  height: 30,
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
                     ),
                   ),
                 ),
-
-              // Visualización del Horario en Tabla
-              Expanded(
-                child: _currentSchedule == null && !_isLoading
-                    ? Center(
-                        child: Text(
-                          _selectedGrade == null ? 'Selecciona un grado para ver o crear su horario.' : 'No hay horario cargado para este grado. Puedes crearlo o eliminarlo.',
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(color: AppColors.white, fontSize: 18),
+              ],
+            ),
+          ),
+          
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Grade Selector
+                  const Text(
+                    'Seleccionar Grado',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.darkText,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primaryPurple.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
                         ),
-                      )
-                    : _isLoading
-                        ? const Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentPurpleLight),
+                      ],
+                      border: Border.all(
+                        color: AppColors.grey.withOpacity(0.3),
+                      ),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        value: _selectedGrade,
+                        hint: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'Selecciona un Grado',
+                            style: TextStyle(color: AppColors.darkText),
+                          ),
+                        ),
+                        dropdownColor: AppColors.white,
+                        style: const TextStyle(color: AppColors.darkText, fontSize: 16),
+                        iconEnabledColor: AppColors.primaryPurple,
+                        isExpanded: true,
+                        items: _grades.map((String grade) {
+                          return DropdownMenuItem<String>(
+                            value: grade,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryPurple.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: const Icon(
+                                      Icons.class_,
+                                      size: 16,
+                                      color: AppColors.primaryPurple,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text(grade),
+                                ],
+                              ),
                             ),
-                          )
-                        : SingleChildScrollView(
-                            scrollDirection: Axis.horizontal, // Permite desplazamiento horizontal
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.vertical, // Permite desplazamiento vertical
-                              child: Table(
-                                border: TableBorder.all(color: AppColors.white.withOpacity(0.5)),
-                                columnWidths: {
-                                  0: const IntrinsicColumnWidth(), // Columna de la hora
-                                  for (int i = 1; i <= daysInSchedule.length; i++)
-                                    i: const FixedColumnWidth(120.0), // Ancho fijo para las columnas de días
-                                },
-                                children: tableRows,
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _selectedGrade = newValue;
+                            _message = ''; // Limpiar mensaje al cambiar de grado
+                            _currentSchedule = null; // Limpiar horario al cambiar de grado
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Action Buttons
+                  const Text(
+                    'Acciones Disponibles',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.darkText,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // First row of buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _isLoading ? null : _fetchSchedule,
+                          icon: _isLoading && _message.contains('Cargando') 
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                ) 
+                              : const Icon(Icons.search),
+                          label: Text(
+                            _isLoading && _message.contains('Cargando') 
+                                ? 'Cargando...' 
+                                : 'Cargar Horario',
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.primaryPurple,
+                            foregroundColor: AppColors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 4,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _isLoading ? null : _createSchedule,
+                          icon: _isLoading && _message.contains('creando') 
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                ) 
+                              : const Icon(Icons.add),
+                          label: Text(
+                            _isLoading && _message.contains('creando') 
+                                ? 'Creando...' 
+                                : 'Crear Horario',
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.secondaryPurple,
+                            foregroundColor: AppColors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 4,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 12),
+                  
+                  // Second row of buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _isLoading ? null : _deleteScheduleByGrade,
+                          icon: _isLoading && _message.contains('eliminando') && _message.contains('grado') 
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                ) 
+                              : const Icon(Icons.delete_forever),
+                          label: Text(
+                            _isLoading && _message.contains('eliminando') && _message.contains('grado') 
+                                ? 'Eliminando...' 
+                                : 'Eliminar por Grado',
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                            foregroundColor: AppColors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 4,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _isLoading ? null : _deleteAllSchedules,
+                          icon: _isLoading && _message.contains('eliminando') && _message.contains('todos') 
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: AppColors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                ) 
+                              : const Icon(Icons.clear_all),
+                          label: Text(
+                            _isLoading && _message.contains('eliminando') && _message.contains('todos') 
+                                ? 'Eliminando Todo...' 
+                                : 'Eliminar Todo',
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red[800],
+                            foregroundColor: AppColors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 4,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Message Section
+                  if (_message.isNotEmpty)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      margin: const EdgeInsets.only(bottom: 24),
+                      decoration: BoxDecoration(
+                        color: _message.contains('exitosamente')
+                            ? Colors.green.withOpacity(0.1)
+                            : Colors.red.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: _message.contains('exitosamente')
+                              ? Colors.green.withOpacity(0.3)
+                              : Colors.red.withOpacity(0.3),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            _message.contains('exitosamente')
+                                ? Icons.check_circle_outline
+                                : Icons.error_outline,
+                            color: _message.contains('exitosamente')
+                                ? Colors.green
+                                : Colors.red,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              _message,
+                              style: TextStyle(
+                                color: _message.contains('exitosamente')
+                                    ? Colors.green
+                                    : Colors.red,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                  
+                  // Schedule Display Section
+                  if (_currentSchedule != null) ...[
+                    const Text(
+                      'Horario Actual',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.darkText,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primaryPurple.withOpacity(0.1),
+                            blurRadius: 15,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                        border: Border.all(
+                          color: AppColors.grey.withOpacity(0.2),
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.vertical,
+                            child: Table(
+                              border: TableBorder.all(
+                                color: AppColors.grey.withOpacity(0.3),
+                                width: 1,
+                              ),
+                              columnWidths: {
+                                0: const IntrinsicColumnWidth(),
+                                for (int i = 1; i <= daysInSchedule.length; i++)
+                                  i: const FixedColumnWidth(140.0),
+                              },
+                              children: tableRows,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ] else if (!_isLoading) ...[
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(40),
+                      decoration: BoxDecoration(
+                        color: AppColors.grey.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: AppColors.grey.withOpacity(0.3),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.calendar_month,
+                            size: 60,
+                            color: AppColors.grey.withOpacity(0.5),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            _selectedGrade == null 
+                                ? 'Selecciona un grado para ver o crear su horario'
+                                : 'No hay horario cargado para este grado',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: AppColors.darkText.withOpacity(0.6),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          if (_selectedGrade != null) ...[
+                            const SizedBox(height: 8),
+                            Text(
+                              'Puedes crearlo o cargarlo usando los botones de arriba',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: AppColors.darkText.withOpacity(0.4),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ],
+                  
+                  if (_isLoading)
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(40),
+                      child: const Column(
+                        children: [
+                          CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryPurple),
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'Procesando...',
+                            style: TextStyle(
+                              color: AppColors.darkText,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

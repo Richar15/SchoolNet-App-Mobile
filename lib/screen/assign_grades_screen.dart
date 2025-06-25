@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:school_net_mobil_app/constants/app_colors.dart';
 import '../model/professor_assignment_model.dart';
 import '../model/student_for_grade_model.dart';
 import '../model/grade_request_model.dart';
@@ -94,7 +95,12 @@ class _AssignGradesScreenState extends State<AssignGradesScreen> {
     } catch (e) {
       setState(() => _isLoadingGrades = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al cargar calificaciones: $e')),
+        SnackBar(
+          content: Text('Error al cargar calificaciones: $e'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
       );
     }
   }
@@ -116,7 +122,17 @@ class _AssignGradesScreenState extends State<AssignGradesScreen> {
   }
 
   void _submitGrades() async {
-    if (_selectedAssignment == null || _selectedStudent == null) return;
+    if (_selectedAssignment == null || _selectedStudent == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Por favor selecciona una asignación y un estudiante'),
+          backgroundColor: Colors.orange,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+      );
+      return;
+    }
 
     List<TextEditingController> controllers = [
       _grade1Controller,
@@ -129,7 +145,12 @@ class _AssignGradesScreenState extends State<AssignGradesScreen> {
       final value = double.tryParse(controller.text);
       if (value == null || value < 0.0 || value > 5.0) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Las notas deben estar entre 0.0 y 5.0')),
+          SnackBar(
+            content: const Text('Las notas deben estar entre 0.0 y 5.0'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
         );
         return;
       }
@@ -144,16 +165,36 @@ class _AssignGradesScreenState extends State<AssignGradesScreen> {
       grade4: double.parse(_grade4Controller.text),
     );
 
-    await _gradeService.assignGrade(request, widget.token);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Notas asignadas con éxito')),
-    );
+    try {
+      await _gradeService.assignGrade(request, widget.token);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Notas asignadas con éxito'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+      );
 
-    _grade1Controller.clear();
-    _grade2Controller.clear();
-    _grade3Controller.clear();
-    _grade4Controller.clear();
-    _loadAssignedGrades();
+      _grade1Controller.clear();
+      _grade2Controller.clear();
+      _grade3Controller.clear();
+      _grade4Controller.clear();
+      setState(() {
+        _selectedStudent = null;
+        _selectedAssignment = null;
+      });
+      _loadAssignedGrades();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error al asignar notas: $e'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+      );
+    }
   }
 
   double _calculateAverage(GradeModel grade) => grade.finalGrade;
@@ -165,200 +206,555 @@ class _AssignGradesScreenState extends State<AssignGradesScreen> {
   }
 
   Widget _buildGradeItem(String label, double grade) {
-    return Column(
-      children: [
-        Text(label, style: TextStyle(fontSize: 10, color: Colors.grey[600])),
-        const SizedBox(height: 2),
-        Text(grade.toStringAsFixed(1),
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-      ],
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+      decoration: BoxDecoration(
+        color: AppColors.grey.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: AppColors.darkText.withOpacity(0.6),
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            grade.toStringAsFixed(1),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: AppColors.darkText,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  InputDecoration _gradeDecoration(String label) {
-    return InputDecoration(
-      labelText: label,
-      border: const OutlineInputBorder(),
+  Widget _buildGradeInput(TextEditingController controller, String label, IconData icon) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.grey.withOpacity(0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryPurple.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: TextStyle(color: AppColors.darkText.withOpacity(0.7)),
+          prefixIcon: Icon(icon, color: AppColors.primaryPurple, size: 20),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          filled: true,
+          fillColor: Colors.transparent,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        ),
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: [
+          FilteringTextInputFormatter.allow(RegExp(r'^\d{0,1}(\.\d{0,2})?$')),
+          GradeRangeInputFormatter(),
+        ],
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          color: AppColors.darkText,
+        ),
+      ),
     );
   }
 
-  TextField _gradeInput(TextEditingController controller, String label) {
-    return TextField(
-      controller: controller,
-      decoration: _gradeDecoration(label),
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^\d{0,1}(\.\d{0,2})?$')),
-        GradeRangeInputFormatter(),
-      ],
+  Widget _buildDropdown<T>({
+    required T? value,
+    required String hint,
+    required List<T> items,
+    required String Function(T) itemText,
+    required void Function(T?) onChanged,
+    required IconData icon,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.grey.withOpacity(0.3)),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primaryPurple.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<T>(
+          value: value,
+          hint: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Icon(icon, color: AppColors.primaryPurple, size: 20),
+                const SizedBox(width: 12),
+                Text(
+                  hint,
+                  style: TextStyle(color: AppColors.darkText.withOpacity(0.7)),
+                ),
+              ],
+            ),
+          ),
+          isExpanded: true,
+          dropdownColor: AppColors.white,
+          style: const TextStyle(color: AppColors.darkText, fontSize: 16),
+          iconEnabledColor: AppColors.primaryPurple,
+          items: items.map((item) {
+            return DropdownMenuItem<T>(
+              value: item,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(itemText(item)),
+              ),
+            );
+          }).toList(),
+          onChanged: onChanged,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.white,
       appBar: AppBar(
-        title: const Text('Asignar Notas'),
+        title: const Text(
+          'Asignar Calificaciones',
+          style: TextStyle(
+            color: AppColors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        backgroundColor: AppColors.primaryPurple,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: AppColors.white),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadAssignedGrades),
+          Container(
+            margin: const EdgeInsets.only(right: 8),
+            decoration: BoxDecoration(
+              color: AppColors.whiteTransparent,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: IconButton(
+              icon: const Icon(Icons.refresh, color: AppColors.white),
+              onPressed: _loadAssignedGrades,
+              tooltip: 'Actualizar calificaciones',
+            ),
+          ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Text('Asignar Nueva Calificación',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 16),
-                  DropdownButton<ProfessorAssignment>(
-                    value: _selectedAssignment,
-                    hint: const Text('Selecciona una asignación'),
-                    isExpanded: true,
-                    items: _assignments.map((a) {
-                      return DropdownMenuItem(
-                        value: a,
-                        child: Text('${a.subject} - ${a.grade}'),
-                      );
-                    }).toList(),
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedAssignment = value;
-                        _selectedStudent = null;
-                        _students = [];
-                      });
-                      if (value != null) _loadStudents(value.id);
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  DropdownButton<StudentForGrade>(
-                    value: _selectedStudent,
-                    hint: const Text('Selecciona un estudiante'),
-                    isExpanded: true,
-                    items: _students.map((s) {
-                      return DropdownMenuItem(value: s, child: Text(s.name));
-                    }).toList(),
-                    onChanged: (value) => setState(() => _selectedStudent = value),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
+      body: Column(
+        children: [
+          // Header Section
+          Container(
+            width: double.infinity,
+            color: AppColors.primaryPurple,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 30),
+                  child: Column(
                     children: [
-                      Expanded(child: _gradeInput(_grade1Controller, 'Nota 1')),
-                      const SizedBox(width: 8),
-                      Expanded(child: _gradeInput(_grade2Controller, 'Nota 2')),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.grade,
+                          size: 40,
+                          color: AppColors.primaryPurple,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Gestión de Calificaciones',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Asigna y consulta las calificaciones de tus estudiantes',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.white,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(child: _gradeInput(_grade3Controller, 'Nota 3')),
-                      const SizedBox(width: 8),
-                      Expanded(child: _gradeInput(_grade4Controller, 'Nota 4')),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _submitGrades,
-                      child: const Text('Asignar Notas'),
+                ),
+                // Curva decorativa
+                Container(
+                  height: 30,
+                  decoration: const BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
                     ),
                   ),
-                ]),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                const Text('Calificaciones Asignadas',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                const Spacer(),
-                if (_isLoadingGrades)
-                  const SizedBox(
-                      width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
+                ),
               ],
             ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: _assignedGrades.isEmpty
-                  ? const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.school_outlined, size: 48, color: Colors.grey),
-                          SizedBox(height: 8),
-                          Text('No hay calificaciones asignadas',
-                              style: TextStyle(color: Colors.grey)),
-                        ],
+          ),
+          
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Form Section
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primaryPurple.withOpacity(0.1),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                      border: Border.all(
+                        color: AppColors.grey.withOpacity(0.2),
                       ),
-                    )
-                  : ListView.builder(
-                      itemCount: _assignedGrades.length,
-                      itemBuilder: (context, index) {
-                        final grade = _assignedGrades[index];
-                        final average = _calculateAverage(grade);
-                        final gradeColor = _getGradeColor(average);
-
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 8.0),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(_getStudentName(grade.studentId),
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold, fontSize: 14)),
-                                          Text(_getAssignmentInfo(grade.assignmentId),
-                                              style: TextStyle(
-                                                  color: Colors.grey[600], fontSize: 12)),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: gradeColor.withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        'Prom: ${grade.finalGrade.toStringAsFixed(1)}',
-                                        style: TextStyle(
-                                          color: gradeColor,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Expanded(child: _buildGradeItem('N1', grade.grade1)),
-                                    Expanded(child: _buildGradeItem('N2', grade.grade2)),
-                                    Expanded(child: _buildGradeItem('N3', grade.grade3)),
-                                    Expanded(child: _buildGradeItem('N4', grade.grade4)),
-                                  ],
-                                ),
-                              ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryPurple.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.add_task,
+                                color: AppColors.primaryPurple,
+                                size: 20,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'Nueva Calificación',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.darkText,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        
+                        // Dropdowns
+                        _buildDropdown<ProfessorAssignment>(
+                          value: _selectedAssignment,
+                          hint: 'Selecciona una asignación',
+                          items: _assignments,
+                          itemText: (a) => '${a.subject} - ${a.grade}°',
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedAssignment = value;
+                              _selectedStudent = null;
+                              _students = [];
+                            });
+                            if (value != null) _loadStudents(value.id);
+                          },
+                          icon: Icons.subject,
+                        ),
+                        
+                        const SizedBox(height: 16),
+                        
+                        _buildDropdown<StudentForGrade>(
+                          value: _selectedStudent,
+                          hint: 'Selecciona un estudiante',
+                          items: _students,
+                          itemText: (s) => s.name,
+                          onChanged: (value) => setState(() => _selectedStudent = value),
+                          icon: Icons.person,
+                        ),
+                        
+                        const SizedBox(height: 24),
+                        
+                        const Text(
+                          'Calificaciones (0.0 - 5.0)',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.darkText,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        
+                        // Grade Inputs
+                        Row(
+                          children: [
+                            Expanded(child: _buildGradeInput(_grade1Controller, 'Nota 1', Icons.looks_one)),
+                            const SizedBox(width: 12),
+                            Expanded(child: _buildGradeInput(_grade2Controller, 'Nota 2', Icons.looks_two)),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Expanded(child: _buildGradeInput(_grade3Controller, 'Nota 3', Icons.looks_3)),
+                            const SizedBox(width: 12),
+                            Expanded(child: _buildGradeInput(_grade4Controller, 'Nota 4', Icons.looks_4)),
+                          ],
+                        ),
+                        
+                        const SizedBox(height: 24),
+                        
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: _submitGrades,
+                            icon: const Icon(Icons.save),
+                            label: const Text(
+                              'Asignar Calificaciones',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.primaryPurple,
+                              foregroundColor: AppColors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              elevation: 4,
                             ),
                           ),
-                        );
-                      },
+                        ),
+                      ],
                     ),
+                  ),
+                  
+                  const SizedBox(height: 32),
+                  
+                  // Assigned Grades Section
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppColors.secondaryPurple.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Icon(
+                          Icons.assignment_turned_in,
+                          color: AppColors.secondaryPurple,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'Calificaciones Asignadas',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.darkText,
+                        ),
+                      ),
+                      const Spacer(),
+                      if (_isLoadingGrades)
+                        const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryPurple),
+                          ),
+                        ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 16),
+                  
+                  _assignedGrades.isEmpty
+                      ? Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(40),
+                          decoration: BoxDecoration(
+                            color: AppColors.grey.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: AppColors.grey.withOpacity(0.3),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.school_outlined,
+                                size: 60,
+                                color: AppColors.grey.withOpacity(0.5),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No hay calificaciones asignadas',
+                                style: TextStyle(
+                                  color: AppColors.darkText.withOpacity(0.6),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Las calificaciones que asignes aparecerán aquí',
+                                style: TextStyle(
+                                  color: AppColors.darkText.withOpacity(0.4),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: _assignedGrades.length,
+                          itemBuilder: (context, index) {
+                            final grade = _assignedGrades[index];
+                            final average = _calculateAverage(grade);
+                            final gradeColor = _getGradeColor(average);
+
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 16),
+                              decoration: BoxDecoration(
+                                color: AppColors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.primaryPurple.withOpacity(0.08),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                                border: Border.all(
+                                  color: AppColors.grey.withOpacity(0.2),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: gradeColor.withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Icon(
+                                            Icons.person,
+                                            color: gradeColor,
+                                            size: 20,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                _getStudentName(grade.studentId),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: AppColors.darkText,
+                                                ),
+                                              ),
+                                              Text(
+                                                _getAssignmentInfo(grade.assignmentId),
+                                                style: TextStyle(
+                                                  color: AppColors.darkText.withOpacity(0.6),
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                          decoration: BoxDecoration(
+                                            color: gradeColor.withOpacity(0.1),
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Text(
+                                            'Promedio: ${grade.finalGrade.toStringAsFixed(1)}',
+                                            style: TextStyle(
+                                              color: gradeColor,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Row(
+                                      children: [
+                                        Expanded(child: _buildGradeItem('Nota 1', grade.grade1)),
+                                        const SizedBox(width: 8),
+                                        Expanded(child: _buildGradeItem('Nota 2', grade.grade2)),
+                                        const SizedBox(width: 8),
+                                        Expanded(child: _buildGradeItem('Nota 3', grade.grade3)),
+                                        const SizedBox(width: 8),
+                                        Expanded(child: _buildGradeItem('Nota 4', grade.grade4)),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
