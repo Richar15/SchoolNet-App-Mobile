@@ -1,12 +1,9 @@
-// lib/screens/register_teacher_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:school_net_mobil_app/constants/app_colors.dart';
 import 'package:school_net_mobil_app/model/teacher_model.dart';
 import 'package:school_net_mobil_app/screen/login_screen.dart';
 import 'package:school_net_mobil_app/service/teacher_service.dart';
 import 'package:school_net_mobil_app/exceptions/auth_exception.dart';
-
 
 class RegisterTeacherScreen extends StatefulWidget {
   const RegisterTeacherScreen({super.key});
@@ -40,7 +37,7 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
     'ECONOMIA',
     'EDUCACION_FISICA',
     'LITERATURA',
-    'ESPANOL'
+    'ESPANOL',
   ];
 
   final TeacherService _teacherService = TeacherService();
@@ -125,13 +122,14 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('¡Registro exitoso! Ahora puedes iniciar sesión.')),
+          SnackBar(
+            content: Text('¡Registro exitoso! Ahora puedes iniciar sesión.'),
+          ),
         );
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const LoginScreen()),
         );
-
       } on AuthException catch (e) {
         setState(() {
           _message = e.message;
@@ -182,7 +180,8 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
               ),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  minHeight: screenHeight - keyboardHeight - (formVerticalPadding * 2),
+                  minHeight:
+                      screenHeight - keyboardHeight - (formVerticalPadding * 2),
                 ),
                 child: Form(
                   key: _formKey,
@@ -215,7 +214,8 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
                         labelText: 'Nombre',
                         hintText: 'Carlos',
                         icon: Icons.person,
-                        validator: (value) => _validateRequired(value, 'nombre'),
+                        validator: (value) =>
+                            _validateRequired(value, 'nombre'),
                       ),
                       const SizedBox(height: 20),
                       _buildTextField(
@@ -223,7 +223,8 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
                         labelText: 'Apellido',
                         hintText: 'Gómez',
                         icon: Icons.person_outline,
-                        validator: (value) => _validateRequired(value, 'apellido'),
+                        validator: (value) =>
+                            _validateRequired(value, 'apellido'),
                       ),
                       const SizedBox(height: 20),
                       _buildTextField(
@@ -231,7 +232,8 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
                         labelText: 'Nombre de Usuario',
                         hintText: 'carlosg',
                         icon: Icons.account_circle,
-                        validator: (value) => _validateRequired(value, 'nombre de usuario'),
+                        validator: (value) =>
+                            _validateRequired(value, 'nombre de usuario'),
                       ),
                       const SizedBox(height: 20),
                       _buildPasswordField(
@@ -264,7 +266,8 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
                         labelText: 'Dirección',
                         hintText: 'Avenida Siempre Viva 742',
                         icon: Icons.home,
-                        validator: (value) => _validateRequired(value, 'dirección'),
+                        validator: (value) =>
+                            _validateRequired(value, 'dirección'),
                       ),
                       const SizedBox(height: 20),
 
@@ -281,9 +284,15 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
                           ),
                           focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
-                            borderSide: const BorderSide(color: AppColors.accentPurpleLight, width: 2),
+                            borderSide: const BorderSide(
+                              color: AppColors.accentPurpleLight,
+                              width: 2,
+                            ),
                           ),
-                          prefixIcon: const Icon(Icons.book, color: AppColors.white),
+                          prefixIcon: const Icon(
+                            Icons.book,
+                            color: AppColors.white,
+                          ),
                         ),
                         dropdownColor: AppColors.primaryPurple,
                         style: const TextStyle(color: AppColors.white),
@@ -299,20 +308,25 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
                             _selectedAreaOfExpertise = newValue;
                           });
                         },
-                        validator: (value) => _validateRequired(value, 'área de experticia'),
+                        validator: (value) =>
+                            _validateRequired(value, 'área de experticia'),
                       ),
                       const SizedBox(height: 30),
 
                       _isLoading
                           ? const CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentPurpleLight),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.accentPurpleLight,
+                              ),
                             )
                           : ElevatedButton(
                               onPressed: _performRegistration,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.accentPurpleLight,
                                 foregroundColor: AppColors.white,
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
@@ -320,7 +334,10 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
                               ),
                               child: const Text(
                                 'Registrar',
-                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                       const SizedBox(height: 20),
@@ -329,7 +346,9 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
                         _message,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: _message.contains('exitoso') ? AppColors.white : Colors.redAccent,
+                          color: _message.contains('exitoso')
+                              ? AppColors.white
+                              : Colors.redAccent,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -339,12 +358,17 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
                         onPressed: () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
                           );
                         },
                         child: const Text(
                           '¿Ya tienes una cuenta? Inicia sesión',
-                          style: TextStyle(color: AppColors.white, fontSize: 16),
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ],
@@ -383,7 +407,10 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
-          borderSide: const BorderSide(color: AppColors.accentPurpleLight, width: 2),
+          borderSide: const BorderSide(
+            color: AppColors.accentPurpleLight,
+            width: 2,
+          ),
         ),
         prefixIcon: icon != null ? Icon(icon, color: AppColors.white) : null,
         errorStyle: const TextStyle(color: Colors.redAccent),
@@ -415,7 +442,10 @@ class _RegisterTeacherScreenState extends State<RegisterTeacherScreen> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),
-          borderSide: const BorderSide(color: AppColors.accentPurpleLight, width: 2),
+          borderSide: const BorderSide(
+            color: AppColors.accentPurpleLight,
+            width: 2,
+          ),
         ),
         prefixIcon: const Icon(Icons.lock, color: AppColors.white),
         suffixIcon: IconButton(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:school_net_mobil_app/constants/app_colors.dart';
 import 'package:school_net_mobil_app/model/schedule_model.dart';
-import 'package:collection/collection.dart'; // Para firstWhereOrNull
+import 'package:collection/collection.dart'; 
 
 class ScheduleHorizontalViewScreen extends StatelessWidget {
   final ScheduleEntity schedule;
@@ -13,7 +13,6 @@ class ScheduleHorizontalViewScreen extends StatelessWidget {
     required this.orderedDays,
   });
 
-  // Función para agrupar sesiones por día y obtener rangos de tiempo únicos
   Map<String, List<Session>> _groupSessionsByDay(List<Session> sessions) {
     final Map<String, List<Session>> grouped = {};
     for (var session in sessions) {
@@ -22,7 +21,6 @@ class ScheduleHorizontalViewScreen extends StatelessWidget {
       }
       grouped[session.day]!.add(session);
     }
-    // Ordenar las sesiones dentro de cada día por hora de inicio
     grouped.forEach((day, sessionList) {
       sessionList.sort((a, b) => a.start.compareTo(b.start));
     });
@@ -53,8 +51,6 @@ class ScheduleHorizontalViewScreen extends StatelessWidget {
     daysInSchedule.sort((a, b) => orderedDays.indexOf(a).compareTo(orderedDays.indexOf(b)));
 
     List<TableRow> tableRows = [];
-
-    // Fila de encabezado (Hora y Días de la semana)
     List<Widget> headerCells = [
       Container(
         padding: const EdgeInsets.all(12),
@@ -95,7 +91,6 @@ class ScheduleHorizontalViewScreen extends StatelessWidget {
     }
     tableRows.add(TableRow(children: headerCells));
 
-    // Filas de datos (Horarios por día)
     for (String timeRange in uniqueTimeRanges) {
       List<Widget> rowCells = [
         Container(
@@ -240,7 +235,6 @@ class ScheduleHorizontalViewScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Header Section
           Container(
             width: double.infinity,
             color: AppColors.primaryPurple,
@@ -291,7 +285,6 @@ class ScheduleHorizontalViewScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-                // Curva decorativa
                 Container(
                   height: 30,
                   decoration: const BoxDecoration(
@@ -305,8 +298,6 @@ class ScheduleHorizontalViewScreen extends StatelessWidget {
               ],
             ),
           ),
-          
-          // Schedule Table
           Expanded(
             child: Container(
               color: AppColors.white,

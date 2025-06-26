@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:school_net_mobil_app/model/student_model.dart';
-import 'package:school_net_mobil_app/exceptions/auth_exception.dart'; // Reutilizamos AuthException para errores de API
+import 'package:school_net_mobil_app/exceptions/auth_exception.dart'; 
 
 class StudentService {
-  final String baseUrl = 'http://192.168.1.102:8080/api/students'; // Ajusta la IP/dominio de tu backend
+  final String baseUrl = 'http://192.168.1.102:8080/api/students'; 
 
   Future<void> createStudent(StudentRequestDTO studentData) async {
     final url = Uri.parse('$baseUrl/create');
@@ -19,25 +19,24 @@ class StudentService {
       );
 
       if (response.statusCode == 200) {
-        // Registro exitoso. Tu backend devuelve StudentDto, pero aquí no lo necesitamos procesar
-        // Si necesitas el DTO de respuesta, deberías definir un StudentResponseDTO
+      
        
       } else {
-        // Si el servidor devuelve un error (ej. 400 Bad Request, 409 Conflict)
+       
         String errorMessage = 'Error al registrar estudiante';
         try {
           final Map<String, dynamic> errorData = jsonDecode(response.body);
           errorMessage = errorData['mensaje'] ?? errorData['message'] ?? errorMessage;
         } catch (_) {
-          // Si el cuerpo no es JSON o no tiene 'mensaje'/'message'
+         
         }
-        throw AuthException(errorMessage); // Reutilizamos AuthException para consistencia
+        throw AuthException(errorMessage); 
       }
     } catch (e) {
       if (e is AuthException) {
-        rethrow; // Relanza la excepción de autenticación/API directamente
+        rethrow; 
       }
-      // Para errores de red o cualquier otra excepción
+      
       throw AuthException('Fallo al conectar con el servidor: ${e.toString()}');
     }
   }
@@ -54,12 +53,12 @@ class StudentService {
         },
       );
 
-      print('StudentService: Respuesta recibida. Status Code: ${response.statusCode}'); // DEBUG
-      print('StudentService: Cuerpo de la respuesta: ${response.body}'); // DEBUG
+      print('StudentService: Respuesta recibida. Status Code: ${response.statusCode}'); 
+      print('StudentService: Cuerpo de la respuesta: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = jsonDecode(response.body);
-        print('StudentService: Decodificación JSON exitosa. Cantidad de elementos: ${responseData.length}'); // DEBUG
+        print('StudentService: Decodificación JSON exitosa. Cantidad de elementos: ${responseData.length}'); 
         return responseData.map((json) => StudentDto.fromJson(json)).toList();
       } else {
         String errorMessage = 'Error al buscar estudiantes por palabra clave: $keyword';
@@ -111,7 +110,7 @@ class StudentService {
   }
 }
 Future<List<StudentDto>> getAllStudents() async {
-  final url = Uri.parse(baseUrl); // Mismo baseUrl ya que es @GetMapping sin path extra
+  final url = Uri.parse(baseUrl); 
 
   try {
     final response = await http.get(

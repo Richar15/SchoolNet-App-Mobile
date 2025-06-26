@@ -82,9 +82,7 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
             offset: const Offset(0, 4),
           ),
         ],
-        border: Border.all(
-          color: AppColors.grey.withOpacity(0.2),
-        ),
+        border: Border.all(color: AppColors.grey.withOpacity(0.2)),
       ),
       child: Column(
         children: [
@@ -197,11 +195,7 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                   ),
                   child: Column(
                     children: [
-                      const Icon(
-                        Icons.cancel,
-                        color: Colors.red,
-                        size: 24,
-                      ),
+                      const Icon(Icons.cancel, color: Colors.red, size: 24),
                       const SizedBox(height: 8),
                       Text(
                         'Reprobadas',
@@ -249,7 +243,6 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
       ),
       body: Column(
         children: [
-          // Header Section
           Container(
             width: double.infinity,
             color: AppColors.primaryPurple,
@@ -300,7 +293,6 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                     ],
                   ),
                 ),
-                // Curva decorativa
                 Container(
                   height: 30,
                   decoration: const BoxDecoration(
@@ -314,7 +306,7 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
               ],
             ),
           ),
-          
+
           Expanded(
             child: FutureBuilder<List<MyGradeModel>>(
               future: futureGrades,
@@ -325,7 +317,9 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.primaryPurple),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primaryPurple,
+                          ),
                         ),
                         SizedBox(height: 16),
                         Text(
@@ -348,9 +342,7 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                       decoration: BoxDecoration(
                         color: Colors.red.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.red.withOpacity(0.3),
-                        ),
+                        border: Border.all(color: Colors.red.withOpacity(0.3)),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -433,12 +425,10 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Stats Card
                       _buildStatsCard(grades),
-                      
+
                       const SizedBox(height: 32),
-                      
-                      // Grades List Header
+
                       Row(
                         children: [
                           Container(
@@ -464,10 +454,9 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
-                      // Grades List
+
                       ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -484,7 +473,9 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.primaryPurple.withOpacity(0.08),
+                                  color: AppColors.primaryPurple.withOpacity(
+                                    0.08,
+                                  ),
                                   blurRadius: 8,
                                   offset: const Offset(0, 4),
                                 ),
@@ -504,7 +495,9 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           color: gradeColor.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         child: Icon(
                                           Icons.subject,
@@ -515,7 +508,8 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                                       const SizedBox(width: 12),
                                       Expanded(
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               grade.subject ?? 'Sin Asignar',
@@ -526,17 +520,30 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                                               ),
                                             ),
                                             Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 8,
+                                                    vertical: 4,
+                                                  ),
                                               decoration: BoxDecoration(
-                                                color: isApproved 
-                                                    ? Colors.green.withOpacity(0.1)
-                                                    : Colors.red.withOpacity(0.1),
-                                                borderRadius: BorderRadius.circular(12),
+                                                color: isApproved
+                                                    ? Colors.green.withOpacity(
+                                                        0.1,
+                                                      )
+                                                    : Colors.red.withOpacity(
+                                                        0.1,
+                                                      ),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
                                               child: Text(
-                                                isApproved ? 'Aprobado' : 'Reprobado',
+                                                isApproved
+                                                    ? 'Aprobado'
+                                                    : 'Reprobado',
                                                 style: TextStyle(
-                                                  color: isApproved ? Colors.green : Colors.red,
+                                                  color: isApproved
+                                                      ? Colors.green
+                                                      : Colors.red,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 12,
                                                 ),
@@ -546,10 +553,15 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                                         ),
                                       ),
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 6,
+                                        ),
                                         decoration: BoxDecoration(
                                           color: gradeColor.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
                                         ),
                                         child: Text(
                                           'Final: ${grade.finalGrade.toStringAsFixed(1)}',
@@ -565,13 +577,33 @@ class _StudentGradesScreenState extends State<StudentGradesScreen> {
                                   const SizedBox(height: 16),
                                   Row(
                                     children: [
-                                      Expanded(child: _buildGradeItem('Nota 1', grade.grade1)),
+                                      Expanded(
+                                        child: _buildGradeItem(
+                                          'Nota 1',
+                                          grade.grade1,
+                                        ),
+                                      ),
                                       const SizedBox(width: 8),
-                                      Expanded(child: _buildGradeItem('Nota 2', grade.grade2)),
+                                      Expanded(
+                                        child: _buildGradeItem(
+                                          'Nota 2',
+                                          grade.grade2,
+                                        ),
+                                      ),
                                       const SizedBox(width: 8),
-                                      Expanded(child: _buildGradeItem('Nota 3', grade.grade3)),
+                                      Expanded(
+                                        child: _buildGradeItem(
+                                          'Nota 3',
+                                          grade.grade3,
+                                        ),
+                                      ),
                                       const SizedBox(width: 8),
-                                      Expanded(child: _buildGradeItem('Nota 4', grade.grade4)),
+                                      Expanded(
+                                        child: _buildGradeItem(
+                                          'Nota 4',
+                                          grade.grade4,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],

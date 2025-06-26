@@ -3,10 +3,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:school_net_mobil_app/model/schedule_model.dart';
-import 'package:school_net_mobil_app/exceptions/auth_exception.dart'; // Reutilizamos AuthException para errores de API
+import 'package:school_net_mobil_app/exceptions/auth_exception.dart'; 
 
 class ScheduleService {
-  final String baseUrl = 'http://192.168.1.102:8080/api/schedules'; // Ajusta la IP/dominio de tu backend
+  final String baseUrl = 'http://192.168.1.102:8080/api/schedules'; 
 
   Future<ScheduleEntity> getScheduleByGrade(String grade) async {
     final url = Uri.parse('$baseUrl/$grade');
@@ -65,7 +65,7 @@ class ScheduleService {
           final Map<String, dynamic> errorData = jsonDecode(response.body);
           errorMessage = errorData['mensaje'] ?? errorData['message'] ?? errorMessage;
         } catch (_) {
-          // Si el cuerpo no es JSON o no tiene 'mensaje'/'message'
+          
         }
         throw AuthException(errorMessage);
       }
@@ -96,7 +96,7 @@ class ScheduleService {
           final Map<String, dynamic> errorData = jsonDecode(response.body);
           errorMessage = errorData['mensaje'] ?? errorData['message'] ?? errorMessage;
         } catch (_) {
-          // Si el cuerpo no es JSON o no tiene 'mensaje'/'message'
+          
         }
         throw AuthException(errorMessage);
       }
@@ -113,13 +113,13 @@ class ScheduleService {
     try {
       final response = await http.delete(url);
 
-      if (response.statusCode != 204) { // 204 No Content para eliminación exitosa
+      if (response.statusCode != 204) { 
         String errorMessage = 'Error al eliminar horarios para el grado $grade';
         try {
           final Map<String, dynamic> errorData = jsonDecode(response.body);
           errorMessage = errorData['mensaje'] ?? errorData['message'] ?? errorMessage;
         } catch (_) {
-          // Si el cuerpo no es JSON o no tiene 'mensaje'/'message'
+          
         }
         throw AuthException(errorMessage);
       }
@@ -142,7 +142,7 @@ class ScheduleService {
           final Map<String, dynamic> errorData = jsonDecode(response.body);
           errorMessage = errorData['mensaje'] ?? errorData['message'] ?? errorMessage;
         } catch (_) {
-          // Si el cuerpo no es JSON o no tiene 'mensaje'/'message'
+         
         }
         throw AuthException(errorMessage);
       }

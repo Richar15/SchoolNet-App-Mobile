@@ -1,5 +1,3 @@
-// lib/model/teacher_model.dart
-
 class TeacherRequestDTO {
   final String name;
   final String lastName;
@@ -36,7 +34,7 @@ class TeacherRequestDTO {
 }
 
 class TeacherDto {
-  final int? id; // ✅ necesario para actualizar
+  final int? id; 
   final String name;
   final String lastName;
   final String username;
@@ -47,7 +45,7 @@ class TeacherDto {
   final String areaOfExpertise;
 
   TeacherDto({
-    this.id, // ✅ debe ser opcional
+    this.id, 
     required this.name,
     required this.lastName,
     required this.username,
@@ -60,7 +58,7 @@ class TeacherDto {
 
   factory TeacherDto.fromJson(Map<String, dynamic> json) {
     return TeacherDto(
-      id: json['id'] as int?, // ✅ importante: puede ser null
+      id: json['id'] as int?, 
       name: json['name'],
       lastName: json['lastName'],
       username: json['username'],
