@@ -312,7 +312,6 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
       ),
       body: Column(
         children: [
-          // Header Section
           Container(
             width: double.infinity,
             color: AppColors.primaryPurple,
@@ -363,7 +362,6 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
                     ],
                   ),
                 ),
-                // Curva decorativa
                 Container(
                   height: 30,
                   decoration: const BoxDecoration(
@@ -377,8 +375,6 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
               ],
             ),
           ),
-          
-          // Search Section
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
             child: Column(
@@ -459,8 +455,6 @@ class _StudentSearchScreenState extends State<StudentSearchScreen> {
               ],
             ),
           ),
-          
-          // Message Section
           if (_message.isNotEmpty)
             Padding(
               padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),

@@ -1,5 +1,3 @@
-// lib/screens/register_student_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:school_net_mobil_app/constants/app_colors.dart';
 import 'package:school_net_mobil_app/model/student_model.dart';
@@ -79,12 +77,11 @@ class _RegisterStudentScreenState extends State<RegisterStudentScreen> {
     return null;
   }
 
-  // Nueva función de validación para números de teléfono colombianos
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return 'Por favor, ingresa tu número de teléfono';
     }
-    // Expresión regular para +57 seguido de 10 dígitos
+   
     if (!RegExp(r'^\d{10}$').hasMatch(value)) {
       return 'Ingresa un número de teléfono colombiano válido (+57XXXXXXXXXX)';
     }

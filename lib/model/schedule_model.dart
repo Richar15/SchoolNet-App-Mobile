@@ -1,11 +1,9 @@
-// lib/model/schedule_model.dart
-
 class Session {
   final int id;
   final String day;
   final String start;
   final String end;
-  final String? subject; // Puede ser nulo para "RECREO"
+  final String? subject; 
   final String teacher;
   final String classroom;
 

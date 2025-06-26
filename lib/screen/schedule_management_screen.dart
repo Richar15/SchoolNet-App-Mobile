@@ -725,8 +725,6 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen> {
                   ),
                   
                   const SizedBox(height: 12),
-                  
-                  // Second row of buttons
                   Row(
                     children: [
                       Expanded(
@@ -839,7 +837,6 @@ class _ScheduleManagementScreenState extends State<ScheduleManagementScreen> {
                       ),
                     ),
                   
-                  // Schedule Display Section
                   if (_currentSchedule != null) ...[
                     const Text(
                       'Horario Actual',

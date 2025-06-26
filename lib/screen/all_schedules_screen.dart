@@ -283,8 +283,6 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
-                // Action Buttons
                 Row(
                   children: [
                     Expanded(
@@ -409,8 +407,6 @@ class _AllSchedulesScreenState extends State<AllSchedulesScreen> {
                 ),
               ),
             ),
-          
-          // Schedules List Section
           Expanded(
             child: _isLoading
                 ? const Center(

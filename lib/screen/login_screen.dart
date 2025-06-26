@@ -36,45 +36,41 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text,
       );
 
-      if (!mounted) return; 
+      if (!mounted) return;
 
       setState(() {
-        _message = '¡Inicio de sesión exitoso! Usuario: ${authResponse.username}, Rol: ${authResponse.rol}';
-        // print('Token recibido: ${authResponse.token}'); // Eliminado print de depuración
+        _message =
+            '¡Inicio de sesión exitoso! Usuario: ${authResponse.username}, Rol: ${authResponse.rol}';
       });
 
-      final String userRole = authResponse.rol?.toUpperCase().trim() ?? ''; // Normaliza el rol a mayúsculas y sin espacios
-      // print('Rol normalizado para navegación: "$userRole"'); // Eliminado print de depuración
-
-      // Lógica de navegación condicional basada en el rol (ahora con nombres en inglés)
+      final String userRole = authResponse.rol?.toUpperCase().trim() ?? '';
       if (userRole == 'ADMIN') {
-        // print('Navegando a AdminPanelScreen...'); // Eliminado print de depuración
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const ManageSchedulesScreen(),
           ),
         );
-      } else if (userRole == 'TEACHER') { 
-        // print('Navegando a DashboardTeacherScreen...'); // Eliminado print de depuración
+      } else if (userRole == 'TEACHER') {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => DashboardTeacherScreen(authData: authResponse),
+            builder: (context) =>
+                DashboardTeacherScreen(authData: authResponse),
           ),
         );
-      } else if (userRole == 'STUDENT') { // CAMBIADO de 'ESTUDIANTE' a 'STUDENT'
-        // print('Navegando a DashboardStudentScreen...'); // Eliminado print de depuración
+      } else if (userRole == 'STUDENT') {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => DashboardStudentScreen(authData: authResponse),
+            builder: (context) =>
+                DashboardStudentScreen(authData: authResponse),
           ),
         );
       } else {
-        
         setState(() {
-          _message = 'Rol de usuario desconocido: "${authResponse.rol}". Contacta al administrador.';
+          _message =
+              'Rol de usuario desconocido: "${authResponse.rol}". Contacta al administrador.';
         });
       }
     } on AuthException catch (e) {
@@ -130,18 +126,14 @@ class _LoginScreenState extends State<LoginScreen> {
             left: 0,
             right: 0,
             height: topWaveDrawHeight,
-            child: CustomPaint(
-              painter: TopWavePainter(),
-            ),
+            child: CustomPaint(painter: TopWavePainter()),
           ),
           Positioned(
             bottom: 0,
             left: 0,
             right: 0,
             height: bottomWaveDrawHeight,
-            child: CustomPaint(
-              painter: BottomWavePainter(),
-            ),
+            child: CustomPaint(painter: BottomWavePainter()),
           ),
           Positioned.fill(
             child: SingleChildScrollView(
@@ -153,7 +145,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  minHeight: screenHeight - keyboardHeight - (formVerticalPadding * 2),
+                  minHeight:
+                      screenHeight - keyboardHeight - (formVerticalPadding * 2),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -186,10 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text(
                       'Bienvenido a SchoolNet',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xCCFFFFFF),
-                      ),
+                      style: TextStyle(fontSize: 16, color: Color(0xCCFFFFFF)),
                     ),
                     const SizedBox(height: 32),
                     TextField(
@@ -207,9 +197,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
-                          borderSide: const BorderSide(color: AppColors.accentPurpleLight, width: 2),
+                          borderSide: const BorderSide(
+                            color: AppColors.accentPurpleLight,
+                            width: 2,
+                          ),
                         ),
-                        prefixIcon: const Icon(Icons.person, color: AppColors.white),
+                        prefixIcon: const Icon(
+                          Icons.person,
+                          color: AppColors.white,
+                        ),
                       ),
                       style: const TextStyle(color: AppColors.white),
                     ),
@@ -229,12 +225,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
-                          borderSide: const BorderSide(color: AppColors.accentPurpleLight, width: 2),
+                          borderSide: const BorderSide(
+                            color: AppColors.accentPurpleLight,
+                            width: 2,
+                          ),
                         ),
-                        prefixIcon: const Icon(Icons.lock, color: AppColors.white),
+                        prefixIcon: const Icon(
+                          Icons.lock,
+                          color: AppColors.white,
+                        ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                             color: AppColors.white,
                           ),
                           onPressed: () {
@@ -250,7 +254,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 30),
                     _isLoading
                         ? const CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentPurpleLight),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.accentPurpleLight,
+                            ),
                           )
                         : ElevatedButton(
                             onPressed: _performLogin,
@@ -265,7 +271,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             child: const Text(
                               'Iniciar Sesión',
-                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                     const SizedBox(height: 20),
@@ -273,22 +282,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       _message,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: _message.startsWith('Error') || _message.contains('inválidos') ? Colors.redAccent : AppColors.white,
+                        color:
+                            _message.startsWith('Error') ||
+                                _message.contains('inválidos')
+                            ? Colors.redAccent
+                            : AppColors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 20), // Espacio antes del nuevo botón
+                    const SizedBox(height: 20),
 
-                    // Nuevo TextButton para registrarse
                     TextButton(
                       onPressed: () {
                         showModalBottomSheet(
                           context: context,
-                          backgroundColor: Colors.transparent, // Fondo transparente para el modal
+                          backgroundColor: Colors.transparent,
                           builder: (BuildContext bc) {
                             return Container(
                               decoration: BoxDecoration(
-                                color: AppColors.primaryPurple, // Color de fondo del modal
+                                color: AppColors.primaryPurple,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(20),
                                   topRight: Radius.circular(20),
@@ -309,28 +321,48 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   ),
                                   ListTile(
-                                    leading: Icon(Icons.person_add, color: AppColors.white),
-                                    title: Text('Registrar Estudiante', style: TextStyle(color: AppColors.white)),
+                                    leading: Icon(
+                                      Icons.person_add,
+                                      color: AppColors.white,
+                                    ),
+                                    title: Text(
+                                      'Registrar Estudiante',
+                                      style: TextStyle(color: AppColors.white),
+                                    ),
                                     onTap: () {
-                                      Navigator.pop(context); // Cierra el bottom sheet
+                                      Navigator.pop(context);
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) =>  RegisterStudentScreen()),
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              RegisterStudentScreen(),
+                                        ),
                                       );
                                     },
                                   ),
                                   ListTile(
-                                    leading: Icon(Icons.school_outlined, color: AppColors.white),
-                                    title: Text('Registrar Profesor', style: TextStyle(color: AppColors.white)),
+                                    leading: Icon(
+                                      Icons.school_outlined,
+                                      color: AppColors.white,
+                                    ),
+                                    title: Text(
+                                      'Registrar Profesor',
+                                      style: TextStyle(color: AppColors.white),
+                                    ),
                                     onTap: () {
-                                      Navigator.pop(context); // Cierra el bottom sheet
+                                      Navigator.pop(
+                                        context,
+                                      ); // Cierra el bottom sheet
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(builder: (context) => const RegisterTeacherScreen()),
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const RegisterTeacherScreen(),
+                                        ),
                                       );
                                     },
                                   ),
-                                  SizedBox(height: 20), // Espacio al final del modal
+                                  SizedBox(height: 20),
                                 ],
                               ),
                             );

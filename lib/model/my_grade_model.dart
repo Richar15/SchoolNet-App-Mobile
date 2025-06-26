@@ -4,7 +4,7 @@ class MyGradeModel {
   final double grade3;
   final double grade4;
   final double finalGrade;
-  final String? subject; // ✅ importante
+  final String? subject;
 
   MyGradeModel({
     required this.grade1,
@@ -22,7 +22,7 @@ class MyGradeModel {
       grade3: (json['grade3'] as num).toDouble(),
       grade4: (json['grade4'] as num).toDouble(),
       finalGrade: (json['finalGrade'] as num).toDouble(),
-      subject: json['subject'], // ✅
+      subject: json['subject'], 
     );
   }
 }

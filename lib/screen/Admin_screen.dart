@@ -41,7 +41,6 @@ class ManageSchedulesScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header Section
             Container(
               width: double.infinity,
               color: AppColors.primaryPurple,
@@ -144,10 +143,8 @@ class ManageSchedulesScreen extends StatelessWidget {
                         MaterialPageRoute(builder: (context) => const ScheduleManagementScreen()),
                       );
                     },
-                  ),
-                  
+                  ), 
                   const SizedBox(height: 16),
-                  
                   _buildOptionCard(
                     context: context,
                     icon: Icons.people,
@@ -179,8 +176,6 @@ class ManageSchedulesScreen extends StatelessWidget {
                   ),
                   
                   const SizedBox(height: 32),
-                  
-                  // Stats o información adicional
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),

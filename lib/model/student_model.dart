@@ -1,5 +1,3 @@
-// lib/model/student_model.dart
-
 class StudentRequestDTO {
   final String name;
   final String lastName;
@@ -35,9 +33,9 @@ class StudentRequestDTO {
   }
 }
 
-// DTO para la respuesta del estudiante (StudentDto)
+
 class StudentDto {
-  final int? id; // <--- CAMBIO AQUÍ: Ahora es nullable
+  final int? id; 
   final String name;
   final String lastName;
   final String username;
@@ -48,7 +46,7 @@ class StudentDto {
   final String grade;
 
   StudentDto({
-    this.id, // <--- CAMBIO AQUÍ: Ya no es required
+    this.id, 
     required this.name,
     required this.lastName,
     required this.username,
@@ -61,7 +59,7 @@ class StudentDto {
 
   factory StudentDto.fromJson(Map<String, dynamic> json) {
     return StudentDto(
-      id: json['id'] as int?, // <--- CAMBIO AQUÍ: Usar 'as int?' para manejar null
+      id: json['id'] as int?, 
       name: json['name'],
       lastName: json['lastName'],
       username: json['username'],

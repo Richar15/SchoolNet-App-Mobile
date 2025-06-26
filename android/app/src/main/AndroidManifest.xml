@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="school_net_mobil_app"
+        android:label="SchoolNet"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

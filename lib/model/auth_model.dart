@@ -1,5 +1,3 @@
-
-// Define la clase para la solicitud de login
 class LoginRequestDTO {
   final String username;
   final String password;
@@ -14,17 +12,17 @@ class LoginRequestDTO {
   }
 }
 
-// Define la clase para la respuesta de autenticación (ahora incluye campos de error)
+
 class AuthResponseDTO {
-  final String? token; // Nullable para casos de error
-  final String? username; // Nullable para casos de error
-  final String? rol; // Nullable para casos de error
-  final int? userId; // Nullable para casos de error
+  final String? token; 
+  final String? username; 
+  final String? rol; 
+  final int? userId; 
   
-  final bool? error; // Nuevo campo para indicar si hubo un error
-  final String? mensaje; // Nuevo campo para el mensaje de error
-  final int? status; // Nuevo campo para el código de estado del error
-  final DateTime? timestamp; // Nuevo campo para la marca de tiempo del error
+  final bool? error; 
+  final String? mensaje; 
+  final int? status;
+  final DateTime? timestamp; 
 
   AuthResponseDTO({
     this.token,

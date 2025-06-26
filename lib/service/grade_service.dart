@@ -25,13 +25,12 @@ class GradeService {
       print('DEBUG - Response Body Length: ${response.body.length}');
 
       if (response.statusCode == 200) {
-        // ✅ Verificar que la respuesta no esté vacía
+     
         if (response.body.isEmpty || response.body.trim().isEmpty) {
           print('WARNING - Respuesta vacía del servidor para assignments');
           return [];
         }
 
-        // ✅ Verificar si es un JSON válido
         if (response.body.trim() == '[]') {
           print('INFO - El servidor devolvió una lista vacía válida');
           return [];
@@ -79,7 +78,7 @@ class GradeService {
       print('DEBUG - getStudents Response Body: "${response.body}"');
 
       if (response.statusCode == 200) {
-        // ✅ Verificar que la respuesta no esté vacía
+       
         if (response.body.isEmpty || response.body.trim().isEmpty) {
           print('WARNING - No hay estudiantes para esta asignación');
           return [];
@@ -163,7 +162,7 @@ class GradeService {
       print('DEBUG - getGradesAssignedByProfessor Response Body: "${response.body}"');
 
       if (response.statusCode == 200) {
-        // ✅ Verificar que la respuesta no esté vacía
+        
         if (response.body.isEmpty || response.body.trim().isEmpty) {
           print('INFO - No hay calificaciones asignadas');
           return [];
@@ -209,7 +208,7 @@ class GradeService {
       print('DEBUG - getGradesOfStudent Response Body: "${response.body}"');
 
       if (response.statusCode == 200) {
-        // ✅ Verificar que la respuesta no esté vacía
+       
         if (response.body.isEmpty || response.body.trim().isEmpty) {
           print('INFO - No hay calificaciones del estudiante');
           return [];
